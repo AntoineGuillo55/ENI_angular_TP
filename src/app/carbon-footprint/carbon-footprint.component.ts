@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CarbonFootprintFormComponent } from '../carbon-footprint-form/carbon-footprint-form.component';
 import { CarbonFootprintResultComponent } from '../carbon-footprint-result/carbon-footprint-result.component';
 import { CommonModule } from '@angular/common';
+import { CarbonFootprintComputeService } from '../services/carbon-footprint-compute.service';
 
 @Component({
   selector: 'app-carbon-footprint',
@@ -11,22 +12,21 @@ import { CommonModule } from '@angular/common';
 })
 export class CarbonFootprintComponent {
 
-  distanceKm: number = 100;
-  consommationPour100Km: number = 8;
+  constructor(private voyageService : CarbonFootprintComputeService) {}
+
+  distanceKm: number = 0;
+  consommationPour100Km: number = 7;
   consommationTotale: number = (this.distanceKm *this.consommationPour100Km)/100;
+  emissionsCO2Totale: number = 0
+
+
+  voyages : any[] = [];
 
   majData() {
-
-    let sumDistanceKm = 0;
-    let sumConsommationPour100Km = 0;
-
-    this.voyages.forEach((element) => {
-      sumDistanceKm += element.distanceKm;
-      sumConsommationPour100Km += element.consommationPour100Km;
-    })
-
-    this.distanceKm = sumDistanceKm;
-    this.consommationPour100Km = sumConsommationPour100Km;
+    let resumeVoyages = this.voyageService.getResumeVoyages();
+    this.distanceKm = resumeVoyages.totalDist;
+    this.consommationPour100Km = resumeVoyages.totalCons;
+    this.emissionsCO2Totale = resumeVoyages.totalCO2;
   }
 
   add100Km() {
@@ -35,50 +35,21 @@ export class CarbonFootprintComponent {
 
   generateTravel() {
 
-    this.voyages.push({
+    let voyage = {
       distanceKm: Math.random() * 100,
-      consommationPour100Km: Math.random() * 10})
+      consommationPour100Km: Math.random() * 10,
+      quantiteCO2: 0
+    };
 
+    voyage.quantiteCO2 = this.voyageService.calculateQuantityCO2(voyage.distanceKm, voyage.consommationPour100Km);
+
+    this.voyageService.addVoyage(voyage)
     this.majData();
   }
-
-  voyages = [
-    { distanceKm: 50, consommationPour100Km: 5 },
-    { distanceKm: 150, consommationPour100Km: 6 },
-    { distanceKm: 250, consommationPour100Km: 7 },
-    { distanceKm: 350, consommationPour100Km: 8 },
-    { distanceKm: 450, consommationPour100Km: 9 }
-]
-
-  // ngOnChanges() {
-  //   this.majData();
-  // }
 
   ngOnInit() {
+    this.voyages = this.voyageService.getVoyage();
     this.majData();
   }
 
-  // ngDoCheck() {
-  //   console.log('ngDoCheck');
-  // }
-
-  // ngAfterContentInit() {
-  //   console.log('ngAfterContentInit');
-  // }
-
-  // ngAfterContentChecked() {
-  //   console.log('ngAfterContentChecked');
-  // }
-
-  // ngAfterViewInit() {
-  //   console.log('ngAfterViewInit');
-  // }
-
-  // ngAfterViewChecked() {
-  //   console.log('ngAfterViewChecked');
-  // }
-
-  // ngOnDestroy() {
-  //   console.log('ngOnDestroy');
-  // }
 }

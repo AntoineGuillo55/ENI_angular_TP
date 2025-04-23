@@ -1,8 +1,9 @@
 <h2>Données utilisées lors du calcul</h2>
 <ul>
-  <li>Consommation de carburant pour 100Km parcourus : <span [ngClass]="{'conso-high': consommationPour100Km > 7, 'conso-low': consommationPour100Km < 4 }">{{consommationPour100Km | number : '1.0-2'}}</span></li>
+  <li>Consommation moyenne de carburant pour 100Km parcourus : <span [ngClass]="{'conso-high': consommationPour100Km > 7, 'conso-low': consommationPour100Km < 4 }">{{consommationPour100Km | number : '1.0-2'}}</span></li>
   <li>Kilomètres parcourus : <span [ngClass]="{'distance-high': distanceKm >= 500, 'distance-low': distanceKm <= 100}">{{distanceKm |  number : '1.0-2'}}</span></li>
   <li>Votre consommation : {{consommationTotale}}L</li>
+  <li>Quantité totale de vos émissions de CO2 : {{emissionsCO2Totale}}</li>
 </ul>
 
 <button (click)="add100Km()">Ajouter 100 km</button>
@@ -21,6 +22,7 @@
         <tr>
             <th>Distance</th>
             <th>Consommation pour 100 kms</th>
+            <th>Quantité de C02 émise pour 100 km</th>
         </tr>
     </thead>
     <tbody>
@@ -28,6 +30,7 @@
         <tr>
           <td>{{ voyage.distanceKm | number : '1.0-2' }} km</td>
           <td>{{ voyage.consommationPour100Km | number : '1.0-2'}} L</td>
+          <td>{{voyage.quantiteCO2 | number : '1.0-2'}}</td>
         </tr>
       }
     </tbody>
