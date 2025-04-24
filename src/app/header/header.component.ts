@@ -1,12 +1,22 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-header',
-  imports: [],
+  imports: [CommonModule, RouterLink],
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
 
-  nomUtilisateur: string = "Antoine"
+  private userSrv: UserService = inject(UserService);
+
+  nomUtilisateur: string = "";
+
+  ngOnInit() {
+
+    this.nomUtilisateur = this.userSrv.getUsername();
+  }
 }
