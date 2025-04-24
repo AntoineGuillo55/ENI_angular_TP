@@ -21,6 +21,7 @@
     <thead>
         <tr>
             <th>Distance</th>
+            <th>Type de moyen de transport</th>
             <th>Consommation pour 100 kms</th>
             <th>Quantité de C02 émise pour 100 km</th>
         </tr>
@@ -29,14 +30,14 @@
       @for(voyage of voyages; track voyage) {
         <tr>
           <td>{{ voyage.distanceKm | number : '1.0-2' }} km</td>
-          <td>{{ voyage.consommationPour100Km | number : '1.0-2'}} L</td>
-          <td>{{voyage.quantiteCO2 | number : '1.0-2'}}</td>
+          <td>{{ voyage?.type }}</td>
+          <td>{{ voyage.consommationPour100Km | number : '1.0-2' }} L</td>
+          <td>{{ voyage.quantiteCO2 | number : '1.0-2' }}</td>
         </tr>
       }
     </tbody>
 </table>
 
-<button (click)="generateTravel()">Générer voyage</button>
 
 <app-carbon-footprint-form></app-carbon-footprint-form>
 <app-carbon-footprint-result></app-carbon-footprint-result>

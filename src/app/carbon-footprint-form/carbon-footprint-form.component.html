@@ -1,1 +1,33 @@
-<p>Formulaire</p>
+<h3>Ajouter un voyage</h3>
+
+<form [formGroup]="voyageForm" (ngSubmit)="onSubmit()">
+    <div>
+        <label for="distance">Distance : </label>
+        <input type="number" formControlName="distance" required>
+        @if (voyageForm.get('distance')?.touched && (voyageForm.get('distance')?.hasError('required') || voyageForm.get('distance')?.hasError('min'))) {
+            <p class="error">La distance doit être supérieure à 0 !</p>
+        }
+    </div>
+    @if (voyageForm.value.vehicule === 'voiture') {
+        <div>
+            <label for="consommation">Consommation : </label>
+            <input type="number" formControlName="consommation">
+        </div>
+    }
+    <div>
+        <label for="date">Date : </label>
+        <input type="date" formControlName="date" required>
+        @if (voyageForm.get('date')?.touched && voyageForm.get('date')?.hasError('required')) {
+            <p class="error">La date est obligatoire !</p>
+        }
+    </div>
+    <div>
+        <label for="vehicule">Liste des véhicules : </label>
+        <select formControlName="vehicule" required>
+            @for (vehicule of listVehicules; track vehicule) {
+                <option [value]="vehicule">{{ vehicule }}</option>
+            }
+        </select>
+    </div>
+    <input type="submit" value="Valider" [disabled]="voyageForm.invalid">
+</form>

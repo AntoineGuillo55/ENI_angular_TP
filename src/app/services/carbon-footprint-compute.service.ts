@@ -7,23 +7,25 @@ export class CarbonFootprintComputeService {
 
   constructor() { }
 
-  voyages = [
-    { distanceKm: 50, consommationPour100Km: 5, quantiteCO2: 14000 },
-    { distanceKm: 150, consommationPour100Km: 6, quantiteCO2: 16000 },
-    { distanceKm: 250, consommationPour100Km: 7, quantiteCO2: 18000 },
-    { distanceKm: 350, consommationPour100Km: 8, quantiteCO2: 20000 },
-    { distanceKm: 450, consommationPour100Km: 9, quantiteCO2: 22000 }
-  ]
+  voyages: any[] = [];
 
   getVoyage() {
     return this.voyages;
   }
 
-  calculateQuantityCO2(dist: number, conso: number) : number {
-    return (dist * conso) / 100 * 2.3;
+  calculateQuantityCO2(dist: number, conso: number, type: string) : number {
+
+    if (type === "voiture") {
+      return (dist * conso) / 100 * 2.3;
+    } else if (type === "avion") {
+      return dist * 0.2;
+    } else {
+      return dist * 0.03;
+    }
   }
 
   addVoyage(voyage: any) {
+
     this.voyages.push(voyage);
   }
 

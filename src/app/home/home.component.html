@@ -1,4 +1,37 @@
 <div class="container">
   <h1>Bonjour.</h1>
-  <button (click)="login('Jean')">Ok.</button>
+  <form #templateForm="ngForm" (ngSubmit)="onSubmitTemplateForm()">
+    <div>
+      <label for="username">Nom d'utilisateur</label>
+      <input
+        placeholder="Ton nom."
+        id="username"
+        type="text"
+        [(ngModel)]="username"
+        name="username"
+        required
+        minlength="3"
+        #name="ngModel"
+      />
+    </div>
+    <div>
+      <label for="password">Mot de passe</label>
+      <input
+        placeholder="Ton mot de passe."
+        id="password"
+        type="password"
+        [(ngModel)]="password"
+        name="password"
+        required
+        minlength="6"
+        #pwd="ngModel"
+      />
+    </div>
+    <button type="submit" [disabled]="templateForm.invalid">Ok.</button>
+  </form>
+  <ul>
+    @for (error of errors; track error) {
+    <li class="error">{{error}}</li>
+    }
+  </ul>
 </div>

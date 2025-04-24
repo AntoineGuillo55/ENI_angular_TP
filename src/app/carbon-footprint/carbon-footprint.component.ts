@@ -4,6 +4,7 @@ import { CarbonFootprintResultComponent } from '../carbon-footprint-result/carbo
 import { CommonModule } from '@angular/common';
 import { CarbonFootprintComputeService } from '../services/carbon-footprint-compute.service';
 
+
 @Component({
   selector: 'app-carbon-footprint',
   imports: [CarbonFootprintFormComponent, CarbonFootprintResultComponent, CommonModule],
@@ -33,19 +34,19 @@ export class CarbonFootprintComponent {
     this.distanceKm += 100;
   }
 
-  generateTravel() {
+  // generateTravel() {
 
-    let voyage = {
-      distanceKm: Math.random() * 100,
-      consommationPour100Km: Math.random() * 10,
-      quantiteCO2: 0
-    };
+  //   let voyage = {
+  //     distanceKm: Math.random() * 100,
+  //     consommationPour100Km: Math.random() * 10,
+  //     quantiteCO2: 0
+  //   };
 
-    voyage.quantiteCO2 = this.voyageService.calculateQuantityCO2(voyage.distanceKm, voyage.consommationPour100Km);
+  //   voyage.quantiteCO2 = this.voyageService.calculateQuantityCO2(voyage.distanceKm, voyage.consommationPour100Km);
 
-    this.voyageService.addVoyage(voyage)
-    this.majData();
-  }
+  //   this.voyageService.addVoyage(voyage)
+  //   this.majData();
+  // }
 
   ngOnInit() {
     this.voyages = this.voyageService.getVoyage();
