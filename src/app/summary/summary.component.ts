@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
+import { HeaderComponent } from '../header/header.component';
 import { FooterComponent } from '../footer/footer.component';
 import { CarbonFootprintComponent } from '../carbon-footprint/carbon-footprint.component';
-import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-summary',

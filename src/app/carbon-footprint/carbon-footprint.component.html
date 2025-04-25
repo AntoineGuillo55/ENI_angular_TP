@@ -1,43 +1,47 @@
-<h2>Données utilisées lors du calcul</h2>
-<ul>
-  <li>Consommation moyenne de carburant pour 100Km parcourus : <span [ngClass]="{'conso-high': consommationPour100Km > 7, 'conso-low': consommationPour100Km < 4 }">{{consommationPour100Km | number : '1.0-2'}}</span></li>
-  <li>Kilomètres parcourus : <span [ngClass]="{'distance-high': distanceKm >= 500, 'distance-low': distanceKm <= 100}">{{distanceKm |  number : '1.0-2'}}</span></li>
-  <li>Votre consommation : {{consommationTotale}}L</li>
-  <li>Quantité totale de vos émissions de CO2 : {{emissionsCO2Totale}}</li>
-</ul>
 
-<button (click)="add100Km()">Ajouter 100 km</button>
+<div>
+    <h2>Calcul de l'empreinte : </h2>
 
-@if(consommationPour100Km >= 7) {
-  <div>Attention, votre concommation est élevée !</div>
-} @else if (consommationPour100Km <= 4) {
-  <div>Félicitation, votre consommation est faible</div>
-} @else {
-  <div>Votre consommation est moyenne</div>
-}
+    <p>Consommation pour 100 km : {{ consommationPour100Km | number: '1.2-2' }} </p>
+    <p [ngClass]="{'haute-distance': distanceKm > 500, 'basse-distance': distanceKm < 100}">Nombre de km : {{ distanceKm }}</p>
+    <p>Consommation totale : {{ distanceKm * consommationPour100Km / 100 | number: '1.2-2' }} </p>
+    <p>Quantité totale de CO2 émise : {{ quantiteTotaleCO2 | number: '1.2-2' }}g</p>
 
-<h2>Liste des voyages</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Distance</th>
-            <th>Type de moyen de transport</th>
-            <th>Consommation pour 100 kms</th>
-            <th>Quantité de C02 émise pour 100 km</th>
-        </tr>
-    </thead>
-    <tbody>
-      @for(voyage of voyages; track voyage) {
-        <tr>
-          <td>{{ voyage.distanceKm | number : '1.0-2' }} km</td>
-          <td>{{ voyage?.type }}</td>
-          <td>{{ voyage.consommationPour100Km | number : '1.0-2' }} L</td>
-          <td>{{ voyage.quantiteCO2 | number : '1.0-2' }}</td>
-        </tr>
-      }
-    </tbody>
-</table>
+    @if (consommationPour100Km > 7) {
+        <div class="rouge">Attention, votre consommation est élevée</div>
+    } @else if (consommationPour100Km < 4) {
+        <div class="vert">Félicitations, votre consommation est faible</div>
+    }
 
+    <button (click)="ajouter100km()">+100km</button>
 
-<app-carbon-footprint-form></app-carbon-footprint-form>
-<app-carbon-footprint-result></app-carbon-footprint-result>
+    <h2>Liste des voyages</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Distance</th>
+                <th>Consommation pour 100 kms</th>
+                <th>Quantité de CO2 émise</th>
+                <th>Véhicule</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (voyage of voyages; track voyage) {
+                <tr>
+                    <td>{{ voyage?.distanceKm }} km</td>
+                    <td>{{ voyage?.consommationPour100Km }} L</td>
+                    <td>{{ voyage?.quantiteCO2 | number: '1.2-2' }} g</td>
+                    <td>{{ voyage?.vehicule }}</td>
+                    <td>{{ voyage?.date | date: 'dd/MM/yyyy' }}</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <button (click)="genererVoyage()">Générer voyage</button>
+
+    <app-carbon-footprint-form (updateVoyages)="updateResumeVoyage()"></app-carbon-footprint-form>
+    
+    <app-carbon-footprint-result></app-carbon-footprint-result>
+</div>

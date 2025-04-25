@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { CarbonFootprintFormComponent } from '../carbon-footprint-form/carbon-footprint-form.component';
-import { CarbonFootprintResultComponent } from '../carbon-footprint-result/carbon-footprint-result.component';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { CarbonFootprintFormComponent } from "../carbon-footprint-form/carbon-footprint-form.component";
+import { CarbonFootprintResultComponent } from "../carbon-footprint-result/carbon-footprint-result.component";
 import { CarbonFootprintComputeService } from '../services/carbon-footprint-compute.service';
-
+import { ResumeVoyage } from '../models/resume-voyage';
+import { Voyage } from '../models/voyage';
 
 @Component({
   selector: 'app-carbon-footprint',
@@ -13,44 +14,46 @@ import { CarbonFootprintComputeService } from '../services/carbon-footprint-comp
 })
 export class CarbonFootprintComponent {
 
-  constructor(private voyageService : CarbonFootprintComputeService) {}
-
   distanceKm: number = 0;
-  consommationPour100Km: number = 7;
-  consommationTotale: number = (this.distanceKm *this.consommationPour100Km)/100;
-  emissionsCO2Totale: number = 0
+  consommationPour100Km: number = 0;
+  quantiteTotaleCO2: number = 0;
+  voyages: Voyage[] = [];
 
+  carbonFootPrintComputeSrv: CarbonFootprintComputeService = inject(CarbonFootprintComputeService);
 
-  voyages : any[] = [];
-
-  majData() {
-    let resumeVoyages = this.voyageService.getResumeVoyages();
-    this.distanceKm = resumeVoyages.totalDist;
-    this.consommationPour100Km = resumeVoyages.totalCons;
-    this.emissionsCO2Totale = resumeVoyages.totalCO2;
+  async ngOnInit() {
+    this.voyages = await this.carbonFootPrintComputeSrv.getVoyages();
+    this.updateResumeVoyage();
   }
 
-  add100Km() {
+  ajouter100km() {
     this.distanceKm += 100;
   }
 
-  // generateTravel() {
+  async genererVoyage() {
+    // Génération d'un nouveau voyage
+    const distance = Math.ceil(Math.random() * 600);
+    const consommation = Math.ceil(Math.random() * 10) + 1;
 
-  //   let voyage = {
-  //     distanceKm: Math.random() * 100,
-  //     consommationPour100Km: Math.random() * 10,
-  //     quantiteCO2: 0
-  //   };
+    let nouveauVoyage: Voyage = {
+      distanceKm: distance,
+      consommationPour100Km: Math.ceil(Math.random() * 10) + 1,
+      quantiteCO2: (distance * consommation) / 100 * 2.3,
+      vehicule: 'voiture',
+      date: new Date(Date.now())
+    }
+    // Ajout du voyage au tableau du service
+    this.carbonFootPrintComputeSrv.addVoyage(nouveauVoyage);
+    this.voyages = await this.carbonFootPrintComputeSrv.getVoyages();
 
-  //   voyage.quantiteCO2 = this.voyageService.calculateQuantityCO2(voyage.distanceKm, voyage.consommationPour100Km);
-
-  //   this.voyageService.addVoyage(voyage)
-  //   this.majData();
-  // }
-
-  ngOnInit() {
-    this.voyages = this.voyageService.getVoyage();
-    this.majData();
+    // Mise à jour des informations des voyages
+    this.updateResumeVoyage();
   }
 
+  async updateResumeVoyage() {
+    const resumeVoyage: ResumeVoyage = await this.carbonFootPrintComputeSrv.getResumeVoyages();
+    this.distanceKm = resumeVoyage.distanceTotale;
+    this.consommationPour100Km = resumeVoyage.consommationMoyenne;
+    this.quantiteTotaleCO2 = resumeVoyage.quantiteCO2Totale;
+  }
 }

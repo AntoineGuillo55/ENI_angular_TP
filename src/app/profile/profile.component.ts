@@ -1,23 +1,25 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { Component, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.scss'
 })
 export class ProfileComponent {
+  
+  utilisateur: string = '';
 
-  constructor(private activatedRoute: ActivatedRoute) {
-
-  }
-
-  name: string = "";
+  private activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
   ngOnInit() {
-    this.name = this.activatedRoute.snapshot.params['name'];
+    this.utilisateur = this.activatedRoute.snapshot.params['nom'];
+
+    // Autre manière de récupérer le paramètre
+    // this.activatedRoute.params.subscribe({
+    //   next: (param: any) => this.utilisateur = param['nom']
+    // });
   }
 
 }

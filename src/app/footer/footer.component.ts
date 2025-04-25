@@ -1,13 +1,12 @@
-import { CommonModule } from '@angular/common';
+import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-footer',
-  imports: [CommonModule],
+  imports: [DatePipe],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
-
-  currentDate: number = Date.now();
+  dateActuelle: number = Date.now();
 }
