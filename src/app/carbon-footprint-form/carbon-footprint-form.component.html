@@ -29,5 +29,22 @@
             }
         </select>
     </div>
+    <div>
+        <label for="carburant">Choix du carburant : </label>
+        <select formControlName="carburant" required>
+            @if (voyageForm.value.vehicule === 'avion') {
+                <option value="kerosene">Kérosène</option>
+            }
+            @if (voyageForm.value.vehicule === 'voiture') {
+                <option value="essence">Essence</option>
+            }
+            @if (voyageForm.value.vehicule === 'voiture' || voyageForm.value.vehicule === 'train') {
+                <option value="diesel">Diesel</option>
+            }
+            @if (voyageForm.value.vehicule === 'train') {
+                <option value="electricite">Electricité</option>
+            }
+        </select>
+    </div>
     <input type="submit" value="Valider" [disabled]="voyageForm.invalid">
 </form>

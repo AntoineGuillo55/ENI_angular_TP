@@ -18,33 +18,38 @@ export class CarbonFootprintFormComponent {
     distance: new FormControl(0, [Validators.required, Validators.min(1)]),
     consommation: new FormControl(0),
     date: new FormControl(null, Validators.required),
-    vehicule: new FormControl(this.listVehicules[0], Validators.required)
+    vehicule: new FormControl(this.listVehicules[0], Validators.required),
+    carburant: new FormControl('', Validators.required)
   });
 
   private carbonFootPrintComputeSrv: CarbonFootprintComputeService = inject(CarbonFootprintComputeService);
 
-  async onSubmit() {
+  onSubmit() {
     if (this.voyageForm.valid) {
       let qteCO2 = 0;
       let consommation = 0;
+      const vehicule = this.voyageForm.value.vehicule;
+      const distance = this.voyageForm.value.distance;
+      const carburant = this.voyageForm.value.carburant;
 
-      if (this.voyageForm.value.vehicule === 'voiture') {
-        qteCO2 = (this.voyageForm.value.distance * this.voyageForm.value.consommation) / 100 * 2.3
+      if (vehicule === 'voiture') {
         consommation = this.voyageForm.value.consommation
       }
-      else if (this.voyageForm.value.vehicule === 'train')
-        qteCO2 = this.voyageForm.value.distance * 0.03;
-      else
-        qteCO2 = this.voyageForm.value.distance * 0.2;
 
-      await this.carbonFootPrintComputeSrv.addVoyage({
-        distanceKm: this.voyageForm.value.distance,
-        consommationPour100Km: consommation,
-        vehicule: this.voyageForm.value.vehicule,
-        quantiteCO2: qteCO2,
-        date: this.voyageForm.value.date
+      this.carbonFootPrintComputeSrv.calculerTrajet(vehicule, distance, consommation, carburant).subscribe({
+        next: async (result: any) => {
+          qteCO2 = result.empreinteCarbone;
+          await this.carbonFootPrintComputeSrv.addVoyage({
+            distanceKm: distance,
+            consommationPour100Km: consommation,
+            vehicule: vehicule,
+            quantiteCO2: qteCO2,
+            date: this.voyageForm.value.date
+          });
+          this.updateVoyages.emit('update');
+
+        }, error: (err) => console.log(err)
       });
-      this.updateVoyages.emit('update');
     }
   }
 }

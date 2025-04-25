@@ -1,1 +1,10 @@
 <h2>Profil de {{ utilisateur }}</h2>
+
+<h3>Empreinte carbone : {{ carbonFootprint }} g</h3>
+
+<div>
+    <input [(ngModel)]="carbonToRemove">
+    <button (click)="removeCarbonFootprint()">Retirer cette quantité de CO2</button>
+</div>
+
+<button (click)="deleteCarbonFootprint()">Réinitialiser l'empreinte carbone</button>
